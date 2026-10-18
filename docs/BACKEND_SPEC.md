@@ -4,10 +4,12 @@ Implemented in **kurukuru-honbu** (Go), branch `feat/tea-and-tab`: `internal/tea
 
 The app calls these routes when `VITE_API_URL` is set. Any failure, timeout (4s) or missing sign-in is ignored and the UI keeps running on its mock seeds.
 
-Auth: `Authorization: Bearer <token>`, verified by honbu's existing `auth.BearerSubject`. The app reads the token from `localStorage["tt_token"]`. Tea & Tab tables use the auth subject as `user_id` with no FK to `users`, so freelancers do not need a college account. The API only ever returns a pseudonymous handle.
+Auth: Tea & Tab has its own accounts (`tea_accounts`, migration 019), separate from Kurukuru users and login. `POST /tea/auth/signup {email, password, handle, role}` and `POST /tea/auth/login {email, password}` return `{token, handle, role}`; send it as `Authorization: Bearer <token>`. Tokens are HS256, audience `tea`, 30 days, signed with **`TEA_TOKEN_SECRET`** (16+ chars; without it sign-in returns 503). Passwords are bcrypt; login is throttled (10 tries per 15 min per email and per IP). Email is used only to sign in and is never returned. The app stores the token in `localStorage["tt_token"]`. Not built yet: email verification and password reset.
 
 | Route | Auth | Purpose | Body → response |
 |---|---|---|---|
+| `POST /tea/auth/signup` | no | make account + profile with chosen nickname (3-20 chars, letters/digits/_) | → `{token, handle, role}` (201); 409 if email or nickname taken |
+| `POST /tea/auth/login` | no | sign in | → `{token, handle, role}`; 401 wrong login |
 | `GET /tea/bootstrap` | optional | clients, posts (newest 200), counts | → `{clients, posts, totalFlags, roles, myVotes}`; a token adds `myVotes` and `mine` |
 | `GET /tea/me` | yes | caller's handle, issued on first call | → `{handle, role}` |
 | `GET /tea/clients/by-phone?phone=` | yes | find the client a reported number belongs to | → same shape as bootstrap, narrowed to that client; 404 if none; 20 lookups/hour/user |

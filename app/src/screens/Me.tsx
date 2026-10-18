@@ -14,6 +14,7 @@ export default function Me({ t }: { t: Tea }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10, flex: 'none' }}>
         {stats.map((s) => <div key={s.l} className="tile" style={{ padding: '12px 6px', textAlign: 'center' }}><div className="px" style={{ fontSize: 28 }}>{s.v}</div><div style={{ font: '700 12px var(--sans)', color: 'var(--muted)' }}>{s.l}</div></div>)}
       </div>
+      {t.signedIn && <button className="chip" onClick={t.logout} style={{ alignSelf: 'flex-start', background: '#fff' }}>log out</button>}
       <div className="lbl">MY FLAGS</div>
       {!mine.length && <div style={{ fontSize: 14, color: 'var(--muted)' }}>You have not flagged anyone yet.</div>}
       {mine.map((m) => (

@@ -5,6 +5,7 @@ import type { Bootstrap, FlagForm, Post, Comment } from './data/types';
 const BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? '';
 const TOKEN_KEY = 'tt_token';
 
+export const apiEnabled = !!BASE;
 export const getToken = () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } };
 export const setToken = (t: string | null) => { try { t ? localStorage.setItem(TOKEN_KEY, t) : localStorage.removeItem(TOKEN_KEY); } catch { /* storage blocked */ } };
 
@@ -36,3 +37,16 @@ export const api = {
   vote: (postId: number, value: -1 | 0 | 1) => call<{ score: number }>('/tea/posts/' + postId + '/vote', send('PUT', { value })),
   comment: (postId: number, text: string, parentId?: number) => call<Comment>('/tea/posts/' + postId + '/comments', send('POST', { text, parentId })),
 };
+
+// Sign-in calls need the server's error message, so they do not use the quiet null-on-failure path.
+export type Session = { token: string; handle: string; role: string };
+export async function authCall(kind: 'signup' | 'login', body: Record<string, string>): Promise<{ ok: true; session: Session } | { ok: false; error: string }> {
+  try {
+    const res = await fetch(BASE + '/tea/auth/' + kind, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) return { ok: true, session: data as Session };
+    return { ok: false, error: (data as { error?: string }).error || 'something went wrong, try again' };
+  } catch {
+    return { ok: false, error: 'could not reach the server' };
+  }
+}
