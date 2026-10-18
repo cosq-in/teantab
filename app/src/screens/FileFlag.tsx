@@ -29,8 +29,8 @@ export default function FileFlag({ t }: { t: Tea }) {
   return (
     <div className="scroll" style={{ paddingBottom: 20 }}>
       <button className="link" onClick={close}>cancel</button>
-      <div><div className="lbl">{step === 3 ? 'ALL DONE' : `STEP ${step + 1} OF 3`}</div><h1 className="px" style={{ margin: '4px 0 0', fontSize: 34, lineHeight: 1.05 }}>{TITLES[step]}</h1></div>
-      <div style={{ display: 'flex', gap: 3, flex: 'none' }}>{[0, 1, 2].map((i) => <div key={i} style={{ flex: 1, height: 14, border: '2px solid var(--ink)', borderRadius: 2, background: i <= step ? 'var(--green)' : '#D9D3BE' }} />)}</div>
+      <div><div className="lbl">{step === 3 ? 'ALL DONE' : `STEP ${step + 1} OF 3`}</div><h1 className="serif" style={{ margin: '4px 0 0', fontSize: 34, lineHeight: 1.05 }}>{TITLES[step]}</h1></div>
+      <div style={{ display: 'flex', gap: 3, flex: 'none' }}>{[0, 1, 2].map((i) => <div key={i} style={{ flex: 1, height: 14, border: '1px solid var(--line)', borderRadius: 9999, background: i <= step ? 'var(--accent)' : '#3B2A47' }} />)}</div>
 
       {step === 0 && <>
         {text('client', 'client or company name')}
@@ -42,7 +42,7 @@ export default function FileFlag({ t }: { t: Tea }) {
         <div className="lbl" style={{ marginTop: 4 }}>THEIR PHONE NUMBERS (OPTIONAL)</div>
         <div style={{ display: 'flex', gap: 8 }}>
           <input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addPhone()} inputMode="tel" placeholder="+91 98765 43210" style={{ flex: 1, minWidth: 0 }} />
-          <button className="chip" onClick={addPhone} style={{ minHeight: 50, background: validPhone(phone.trim()) ? 'var(--green)' : 'var(--paper)', opacity: validPhone(phone.trim()) ? 1 : 0.6 }}>add</button>
+          <button className="chip" onClick={addPhone} style={{ minHeight: 50, background: validPhone(phone.trim()) ? 'var(--accent)' : 'var(--paper)', opacity: validPhone(phone.trim()) ? 1 : 0.6 }}>add</button>
         </div>
         {!!form.phones.length && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{form.phones.map((p) => <button key={p} className="chip" onClick={() => setForm({ ...form, phones: form.phones.filter((x) => x !== p) })} style={{ background: '#fff' }}>{p} ✕</button>)}</div>}
         <div style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.5 }}>Numbers are never shown to anyone. They only let other freelancers find this client by searching the number. Up to 5.</div>
@@ -50,7 +50,7 @@ export default function FileFlag({ t }: { t: Tea }) {
       </>}
       {step === 1 && <>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-          {CATS.map((c) => { const on = cats.includes(c); return <button key={c} className="chip" onClick={() => setCats(on ? cats.filter((x) => x !== c) : [...cats, c])} style={{ minHeight: 44, padding: '0 14px', fontSize: 14, background: on ? 'var(--green)' : 'var(--paper)', boxShadow: on ? '0 3px 0 var(--ink)' : 'none' }}>{c}</button>; })}
+          {CATS.map((c) => { const on = cats.includes(c); return <button key={c} className="chip" onClick={() => setCats(on ? cats.filter((x) => x !== c) : [...cats, c])} style={{ minHeight: 44, padding: '0 14px', fontSize: 14, background: on ? 'var(--accent)' : 'var(--paper)', boxShadow: on ? 'var(--shadow-soft)' : 'none' }}>{c}</button>; })}
         </div>
         {text('amount', 'amount unpaid in ₹ (optional)', { inputMode: 'numeric' })}
       </>}
@@ -60,24 +60,24 @@ export default function FileFlag({ t }: { t: Tea }) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{PROOF_TYPES.map((k) => <button key={k} className="chip" onClick={() => setProofs([...proofs, k])} style={{ borderStyle: 'dashed', background: 'var(--paper)' }}>+ {k}</button>)}</div>
         {proofs.map((n, i) => (
           <div key={i} className="row" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', boxShadow: 'none' }}>
-            <div style={{ flex: 'none', width: 44, height: 44, border: '2px solid var(--ink)', borderRadius: 4, background: 'repeating-linear-gradient(45deg,#E6DFC9 0 6px,#F5EEDC 6px 12px)' }} />
+            <div style={{ flex: 'none', width: 44, height: 44, border: '1px solid var(--line)', borderRadius: 8, background: 'repeating-linear-gradient(45deg,#E6D6DD 0 6px,#F2E7EA 6px 12px)' }} />
             <div style={{ flex: 1, minWidth: 0, font: '700 13px var(--sans)' }}>{n} {i + 1}.png</div>
             <button className="plain" onClick={() => setProofs(proofs.filter((_, j) => j !== i))} style={{ font: '700 12px var(--sans)', color: 'var(--red)', padding: 6 }}>remove</button>
           </div>
         ))}
         <div className="lbl" style={{ marginTop: 2 }}>WHO CAN SEE YOUR PROOF</div>
         <div style={{ display: 'flex', gap: 8 }}>
-          {([['public', true], ['private', false]] as const).map(([l, v]) => <button key={l} className="px" onClick={() => setPub(v)} style={{ flex: 1, minHeight: 46, borderRadius: 6, border: '3px solid var(--ink)', background: pub === v ? 'var(--green)' : 'var(--paper)', fontSize: 15 }}>{l}</button>)}
+          {([['public', true], ['private', false]] as const).map(([l, v]) => <button key={l} className="serif" onClick={() => setPub(v)} style={{ flex: 1, minHeight: 46, borderRadius: 14, border: '1px solid var(--line)', background: pub === v ? 'var(--accent)' : 'var(--paper)', fontSize: 15 }}>{l}</button>)}
         </div>
         <div style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--sub)' }}>{pub ? 'Everyone can view your proof on the thread. Hide any phone numbers or names before you upload.' : 'Only reviewers see your proof. The thread shows that it was checked, not the files themselves.'}</div>
         <button className="plain" onClick={() => setAttest(!attest)} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-          <span className="px" style={{ flex: 'none', width: 26, height: 26, borderRadius: 6, border: '3px solid var(--ink)', background: attest ? 'var(--green)' : 'var(--paper)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>{attest ? 'x' : ''}</span>
+          <span className="serif" style={{ flex: 'none', width: 26, height: 26, borderRadius: 14, border: '1px solid var(--line)', background: attest ? 'var(--accent)' : 'var(--paper)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>{attest ? 'x' : ''}</span>
           <span style={{ fontSize: 13, lineHeight: 1.5, color: 'var(--sub)' }}>This is accurate as far as I know. Flags are checked against my proof before they go public.</span>
         </button>
       </>}
       {step === 3 && <>
-        <div className="row" style={{ boxShadow: '0 4px 0 var(--ink)', padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div className="px" style={{ fontSize: 24, lineHeight: 1.15 }}>{form.client} is flagged</div>
+        <div className="row" style={{ boxShadow: 'var(--shadow)', padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div className="serif" style={{ fontSize: 24, lineHeight: 1.15 }}>{form.client} is flagged</div>
           <div style={{ color: 'var(--sub)', fontSize: 14, lineHeight: 1.5 }}>Your flag is live as a thread. A reviewer will check your proof and reach out to {t.handle} if they need more.</div>
         </div>
         <button className="btn" onClick={close}>see it in the tea</button>
