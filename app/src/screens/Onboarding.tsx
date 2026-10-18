@@ -13,7 +13,7 @@ export default function Onboarding({ t }: { t: Tea }) {
   const [step, setStep] = useState(0);
   return (
     <>
-      <div className="col" style={{ position: 'absolute', inset: 0, padding: 'min(56px,6vh) 22px 0', gap: 'min(14px,1.6vh)', zIndex: 2, overflow: 'hidden' }}>
+      <div className="col ob" style={{ position: 'absolute', inset: 0, padding: 'min(56px,6vh) 22px 0', gap: 'min(14px,1.6vh)', zIndex: 2, overflow: 'hidden' }}>
         <div style={{ alignSelf: 'center', flex: 'none', width: 84, height: 84, background: 'var(--gold)', border: '3px solid var(--ink)', borderRadius: 6, boxShadow: '0 5px 0 var(--ink),inset 0 -6px 0 var(--gold-d)', display: 'flex', alignItems: 'center', justifyContent: 'center', animation: 'bob 2.4s ease-in-out infinite' }}>
           <svg width="52" height="52" viewBox="0 0 24 24" shapeRendering="crispEdges"><rect x="7" y="1" width="2" height="4" fill="#fff" stroke="#1F2A1D" strokeWidth="1" /><rect x="11" y="2" width="2" height="4" fill="#fff" stroke="#1F2A1D" strokeWidth="1" /><rect x="16" y="11" width="5" height="7" fill="none" stroke="#1F2A1D" strokeWidth="2.5" /><rect x="3" y="8" width="14" height="14" fill="#F5EEDC" stroke="#1F2A1D" strokeWidth="2.5" /><rect x="5" y="10" width="10" height="3" fill="#D0452F" /><rect x="5" y="18" width="10" height="2" fill="#E6DFC9" /></svg>
         </div>

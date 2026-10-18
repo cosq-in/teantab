@@ -17,7 +17,7 @@ export default function App() {
         <>
           <Home t={t} />
           {v && (
-            <div className="col" style={{ position: 'absolute', inset: 0, background: 'var(--cream)', zIndex: 5, animation: 'slide .25s ease-out' }}>
+            <div className="col panel" style={{ position: 'absolute', inset: 0, background: 'var(--cream)', zIndex: 5, animation: 'slide .25s ease-out' }}>
               <div className="grass" style={{ flex: 'none', height: 22 }} />
               {v.k === 'thread' && <Thread t={t} id={v.id} />}
               {v.k === 'dossier' && <Dossier t={t} id={v.id} />}
@@ -25,6 +25,7 @@ export default function App() {
               {v.k === 'file' && <FileFlag t={t} />}
             </div>
           )}
+          {!v && <div className="panel-empty"><div className="px" style={{ fontSize: 28 }}>pick some tea</div><div style={{ maxWidth: 320, fontSize: 15, lineHeight: 1.5, color: 'var(--sub)' }}>Open a thread to read and reply, tap a client to see their record, or flag one of your own.</div></div>}
         </>
       )}
     </div></div>

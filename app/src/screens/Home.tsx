@@ -27,7 +27,7 @@ export default function Home({ t }: { t: Tea }) {
   const openClient = (id: number) => id && t.setView({ k: 'dossier', id });
 
   return (
-    <div className="col" style={{ position: 'absolute', inset: 0 }}>
+    <div className="col home" style={{ position: 'absolute', inset: 0 }}>
       <div style={{ flex: 'none', padding: '18px 14px 0', display: 'flex', gap: 10, alignItems: 'center', zIndex: 2 }}>
         <div className="card" style={{ flex: 1, minWidth: 0, padding: '9px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <div className="px" style={{ fontSize: 22 }}>tea &amp; tab</div>
