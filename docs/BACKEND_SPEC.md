@@ -1,6 +1,6 @@
 # Tea & Tab backend
 
-Implemented in **kurukuru-honbu** (Go), branch `feat/tea-and-tab`: `internal/tea/`, `migrations/017_tea_and_tab.sql`, wired in `main.go`. A copy of the change is in `backend/kurukuru-honbu-tea.patch` (`git am` it onto honbu `main`).
+Implemented in **kurukuru-honbu** (Go), branch `feat/tea-and-tab`: `internal/tea/`, `migrations/017_tea_and_tab.sql`, wired in `main.go`.
 
 The app calls these routes when `VITE_API_URL` is set. Any failure, timeout (4s) or missing sign-in is ignored and the UI keeps running on its mock seeds.
 
