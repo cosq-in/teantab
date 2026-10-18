@@ -3,7 +3,7 @@ import { api } from './api';
 import { HANDLES, SEED_CLIENTS, SEED_POSTS, SEED_ROLES } from './data/seed';
 import type { Client, FlagForm, Post } from './data/types';
 
-export const EMPTY_FORM: FlagForm = { client: '', gst: '', job: '', amount: '', story: '', web: '', insta: '' };
+export const EMPTY_FORM: FlagForm = { client: '', gst: '', job: '', amount: '', story: '', web: '', insta: '', phones: [] };
 export type View = null | { k: 'thread'; id: number } | { k: 'dossier'; id: number } | { k: 'me' } | { k: 'file'; prefill?: string };
 
 export function useTea() {
@@ -64,11 +64,21 @@ export function useTea() {
     });
   }, [clients, handle]);
 
+  // Search by a client's phone number. The backend never returns numbers, only the matching client and its flags.
+  const findByPhone = useCallback(async (phone: string) => {
+    const b = await api.byPhone(phone);
+    if (!b || !b.clients.length) return null;
+    setClients((cs) => [...cs.filter((c) => !b.clients.some((n) => n.id === c.id)), ...b.clients]);
+    setPosts((ps) => [...ps.filter((p) => !b.posts.some((n) => n.id === p.id)), ...b.posts]);
+    setRoles((r) => ({ ...r, ...b.roles }));
+    return b.clients[0].id;
+  }, []);
+
   const nextHandle = () => setHandle(HANDLES[(HANDLES.indexOf(handle) + 1) % HANDLES.length]);
   const clientOf = useCallback((id: number) => clients.find((c) => c.id === id), [clients]);
   const sortedClients = useMemo(() => [...clients].sort((a, b) => b.total - a.total), [clients]);
   const roleOf = (h: string) => (h === handle ? role : roles[h] || 'freelancer');
-  return { role, setRole: pickRole, handle, nextHandle, onboard, setOnboard, clients, sortedClients, posts, totalFlags, votes, vote, addComment, submitFlag, view, setView, clientOf, roleOf };
+  return { role, setRole: pickRole, handle, nextHandle, onboard, setOnboard, clients, sortedClients, posts, totalFlags, votes, vote, addComment, submitFlag, findByPhone, view, setView, clientOf, roleOf };
 }
 export type Tea = ReturnType<typeof useTea>;
 

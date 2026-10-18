@@ -29,6 +29,7 @@ const send = (method: string, body: unknown): RequestInit => ({ method, body: JS
 
 export const api = {
   bootstrap: () => call<Bootstrap>('/tea/bootstrap'),
+  byPhone: (phone: string) => call<Bootstrap>('/tea/clients/by-phone?phone=' + encodeURIComponent(phone)),
   me: () => call<{ handle: string; role: string }>('/tea/me'),
   setRole: (role: string) => call<{ handle: string; role: string }>('/tea/me', send('PUT', { role })),
   createFlag: (f: FlagForm, cats: string[], proofs: string[], pub: boolean) => call<Post>('/tea/flags', send('POST', { ...f, cats, proofs, pub })),

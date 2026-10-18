@@ -8,5 +8,5 @@ export interface Client {
   id: number; total: number; name: string; short: string; kind: string; loc: string;
   links: string[][]; owed: string; tally: [string, number][];
 }
-export interface FlagForm { client: string; gst: string; job: string; amount: string; story: string; web: string; insta: string }
+export interface FlagForm { client: string; gst: string; job: string; amount: string; story: string; web: string; insta: string; phones: string[] }
 export interface Bootstrap { clients: Client[]; posts: Post[]; totalFlags: number; roles: Record<string, string>; myVotes: Record<string, -1 | 1> }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ageOf, countComments, type Tea } from '../store';
 import type { Post } from '../data/types';
 
@@ -9,7 +9,18 @@ export default function Home({ t }: { t: Tea }) {
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<'hot' | 'new' | 'top'>('hot');
   const q = query.trim().toLowerCase();
-  const matches = q ? t.clients.filter((c) => c.name.toLowerCase().includes(q)) : [];
+  const digits = q.replace(/\D/g, '');
+  const isPhone = /^[+\d][\d\s()-]*$/.test(q) && digits.length >= 10;
+  const [phoneHit, setPhoneHit] = useState<{ id: number } | 'none' | 'wait' | null>(null);
+  useEffect(() => {
+    if (!isPhone) { setPhoneHit(null); return; }
+    let live = true;
+    setPhoneHit('wait');
+    t.findByPhone(query).then((id) => live && setPhoneHit(id ? { id } : 'none'));
+    return () => { live = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, isPhone]);
+  const matches = isPhone ? (phoneHit && typeof phoneHit === 'object' ? t.clients.filter((c) => c.id === phoneHit.id) : []) : q ? t.clients.filter((c) => c.name.toLowerCase().includes(q)) : [];
   const posts = [...t.posts].sort((a, b) => rankOf(a, sort) - rankOf(b, sort));
   const top = t.sortedClients;
   const podium = ([[1, 2, 44, '#B8B6AC'], [0, 1, 62, '#E8B23A'], [2, 3, 30, '#C98A55']] as const).map(([i, r, h, c]) => ({ c: top[i], rank: r, h, color: c })).filter((x) => x.c);
@@ -26,7 +37,7 @@ export default function Home({ t }: { t: Tea }) {
       </div>
 
       <div className="col" style={{ flex: 1, minHeight: 0, overflow: 'auto', padding: '16px 14px 20px', gap: 14, zIndex: 1 }}>
-        <input className="field" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="check a client before you sign" style={{ flex: 'none', minHeight: 52, boxShadow: '0 3px 0 var(--ink)' }} />
+        <input className="field" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="check a client by name or phone number" style={{ flex: 'none', minHeight: 52, boxShadow: '0 3px 0 var(--ink)' }} />
 
         {q ? <>
           {matches.map((m) => (
@@ -35,7 +46,8 @@ export default function Home({ t }: { t: Tea }) {
               <span className="px" style={{ flex: 'none', background: 'var(--red)', color: '#fff', border: '3px solid var(--ink)', borderRadius: 6, padding: '2px 8px', fontSize: 14 }}>{m.total} flags</span>
             </button>
           ))}
-          {!matches.length && <div className="card" style={{ padding: 16, fontSize: 14, lineHeight: 1.5 }}>No flags on this client yet. That is not a clean record, so agree payment terms in writing before you start. Had a bad time with them? Be the first to flag.</div>}
+          {!matches.length && phoneHit === 'wait' && <div className="card" style={{ padding: 16, fontSize: 14 }}>Checking that number...</div>}
+          {!matches.length && phoneHit !== 'wait' && <div className="card" style={{ padding: 16, fontSize: 14, lineHeight: 1.5 }}>{isPhone ? 'No client is linked to that number. Numbers are never shown, only matched. ' : ''}No flags on this client yet. That is not a clean record, so agree payment terms in writing before you start. Had a bad time with them? Be the first to flag.</div>}
         </> : <>
           <div style={{ flex: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}><div className="px" style={{ fontSize: 20 }}>hall of shame</div><div style={{ font: '700 12px var(--sans)' }}>top 3 most flagged</div></div>
@@ -85,7 +97,7 @@ export default function Home({ t }: { t: Tea }) {
       </div>
 
       <div style={{ flex: 'none', padding: '12px 14px 18px', background: 'var(--cream)', borderTop: '3px solid var(--ink)', boxShadow: 'inset 0 4px 0 var(--green)', zIndex: 2 }}>
-        <button className="btn" onClick={() => t.setView({ k: 'file', prefill: q && !matches.length ? query : '' })} style={{ width: '100%', marginTop: 6, marginBottom: 5 }}>flag a client</button>
+        <button className="btn" onClick={() => t.setView({ k: 'file', prefill: q && !isPhone && !matches.length ? query : '' })} style={{ width: '100%', marginTop: 6, marginBottom: 5 }}>flag a client</button>
       </div>
     </div>
   );

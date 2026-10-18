@@ -13,6 +13,9 @@ export default function FileFlag({ t }: { t: Tea }) {
   const [proofs, setProofs] = useState<string[]>([]);
   const [pub, setPub] = useState(true);
   const [attest, setAttest] = useState(false);
+  const [phone, setPhone] = useState('');
+  const validPhone = (v: string) => /^(\+?91|0)?[6-9]\d{9}$/.test(v.replace(/[\s-]/g, ''));
+  const addPhone = () => { const v = phone.trim(); if (validPhone(v) && form.phones.length < 5 && !form.phones.includes(v)) { setForm({ ...form, phones: [...form.phones, v] }); setPhone(''); } };
   const set = (k: keyof FlagForm) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
   const ok = (step === 0 && !!form.client.trim()) || (step === 1 && !!cats.length) || (step === 2 && attest && !!form.story.trim());
   const next = () => {
@@ -36,6 +39,13 @@ export default function FileFlag({ t }: { t: Tea }) {
         <div className="lbl" style={{ marginTop: 4 }}>THEIR LINKS (OPTIONAL)</div>
         {text('web', 'website, e.g. zenithbrand.in')}
         {text('insta', 'instagram, linkedin or x handle')}
+        <div className="lbl" style={{ marginTop: 4 }}>THEIR PHONE NUMBERS (OPTIONAL)</div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input className="field" value={phone} onChange={(e) => setPhone(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addPhone()} inputMode="tel" placeholder="+91 98765 43210" style={{ flex: 1, minWidth: 0 }} />
+          <button className="chip" onClick={addPhone} style={{ minHeight: 50, background: validPhone(phone.trim()) ? 'var(--green)' : 'var(--paper)', opacity: validPhone(phone.trim()) ? 1 : 0.6 }}>add</button>
+        </div>
+        {!!form.phones.length && <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>{form.phones.map((p) => <button key={p} className="chip" onClick={() => setForm({ ...form, phones: form.phones.filter((x) => x !== p) })} style={{ background: '#fff' }}>{p} ✕</button>)}</div>}
+        <div style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.5 }}>Numbers are never shown to anyone. They only let other freelancers find this client by searching the number. Up to 5.</div>
         <div style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.5 }}>Only describe how the client behaved during the work. Leave out private personal details.</div>
       </>}
       {step === 1 && <>
