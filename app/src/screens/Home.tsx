@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ageOf, countComments, type Tea } from '../store';
+import WebFeed from '../components/WebFeed';
 import type { Post } from '../data/types';
 
 export const who = (t: Tea, h: string) => h + ', ' + t.roleOf(h);
@@ -93,6 +94,7 @@ export default function Home({ t }: { t: Tea }) {
               </div>
             );
           })}
+          <WebFeed />
         </>}
       </div>
 

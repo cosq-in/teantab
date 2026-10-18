@@ -1,4 +1,4 @@
-import type { Bootstrap, FlagForm, Post, Comment } from './data/types';
+import type { WebItem, Bootstrap, FlagForm, Post, Comment } from './data/types';
 
 // Talks to the /tea routes of kurukuru-honbu (see docs/BACKEND_SPEC.md). Every call resolves to
 // null on failure so the UI keeps running on mock seeds with no backend, or with no sign-in.
@@ -31,6 +31,7 @@ const send = (method: string, body: unknown): RequestInit => ({ method, body: JS
 export const api = {
   bootstrap: () => call<Bootstrap>('/tea/bootstrap'),
   byPhone: (phone: string) => call<Bootstrap>('/tea/clients/by-phone?phone=' + encodeURIComponent(phone)),
+  web: () => call<{ items: WebItem[] }>('/tea/web'),
   me: () => call<{ handle: string; role: string }>('/tea/me'),
   setRole: (role: string) => call<{ handle: string; role: string }>('/tea/me', send('PUT', { role })),
   createFlag: (f: FlagForm, cats: string[], proofs: string[], pub: boolean) => call<Post>('/tea/flags', send('POST', { ...f, cats, proofs, pub })),
@@ -48,5 +49,15 @@ export async function authCall(kind: 'signup' | 'login', body: Record<string, st
     return { ok: false, error: (data as { error?: string }).error || 'something went wrong, try again' };
   } catch {
     return { ok: false, error: 'could not reach the server' };
+  }
+}
+
+export async function requestRemoval(id: number, email: string, reason: string): Promise<string | null> {
+  try {
+    const res = await fetch(BASE + '/tea/web/' + id + '/removal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, reason }) });
+    if (res.ok) return null;
+    return ((await res.json().catch(() => ({}))) as { error?: string }).error || 'something went wrong, try again';
+  } catch {
+    return 'could not reach the server';
   }
 }
