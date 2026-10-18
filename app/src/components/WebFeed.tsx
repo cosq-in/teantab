@@ -10,13 +10,14 @@ export default function WebFeed() {
   return (
     <div className="col" style={{ flex: 'none', gap: 10 }}>
       <div><div className="px" style={{ fontSize: 20 }}>from around the web</div>
-        <div style={{ font: '700 12px/1.4 var(--sans)', color: 'var(--muted)' }}>Links to public threads, picked by us. Unverified: these are other people's claims, not Tea &amp; Tab flags.</div></div>
+        <div style={{ font: '700 12px/1.4 var(--sans)', color: 'var(--muted)' }}>Links to public threads and court judgments, picked by us. They are not Tea &amp; Tab flags. Threads are other people's unverified claims; judgments are public records, so check for later appeals.</div></div>
       {items.map((it) => <Item key={it.id} it={it} onHidden={() => setItems((xs) => xs.filter((x) => x.id !== it.id))} />)}
     </div>
   );
 }
 
 function Item({ it, onHidden }: { it: WebItem; onHidden: () => void }) {
+  const court = it.kind === 'court';
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [reason, setReason] = useState('');
@@ -31,11 +32,11 @@ function Item({ it, onHidden }: { it: WebItem; onHidden: () => void }) {
   return (
     <div className="row col" style={{ padding: '10px 12px', gap: 6, flex: 'none' }}>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-        <span className="tag" style={{ background: 'var(--cream2)', border: '2px solid var(--ink)', padding: '0 6px' }}>UNVERIFIED</span>
+        <span className="tag" style={{ background: court ? 'var(--gold)' : 'var(--cream2)', border: '2px solid var(--ink)', padding: '0 6px' }}>{court ? 'COURT RECORD' : 'UNVERIFIED'}</span>
         <span className="tag" style={{ background: 'var(--ink)', color: 'var(--cream)' }}>{it.about}</span>
       </div>
       <div style={{ fontSize: 14, lineHeight: 1.45 }}>{it.summary}</div>
-      <a href={it.url} target="_blank" rel="noopener noreferrer" style={{ font: '700 12px/1.4 var(--sans)', overflowWrap: 'anywhere' }}>Source: {it.source}{it.threadDate ? ', ' + it.threadDate : ''}: "{it.sourceTitle}"</a>
+      <a href={it.url} target="_blank" rel="noopener noreferrer" style={{ font: '700 12px/1.4 var(--sans)', overflowWrap: 'anywhere' }}>{court ? `${it.court}: ${it.sourceTitle}. Read the judgment` : `Source: ${it.source}${it.threadDate ? ', ' + it.threadDate : ''}: "${it.sourceTitle}"`}</a>
       {!open && <button className="plain" onClick={() => setOpen(true)} style={{ font: '700 12px var(--sans)', color: 'var(--muted)' }}>are you the company? ask for removal</button>}
       {open && <div className="col" style={{ gap: 8 }}>
         <input className="field" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your email, so we can reply" style={{ minHeight: 42, fontSize: 14 }} />

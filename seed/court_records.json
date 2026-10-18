@@ -1,0 +1,37 @@
+[
+  {
+    "kind": "court",
+    "url": "https://indiankanoon.org/doc/189609203/",
+    "court": "High Court of Gujarat",
+    "sourceTitle": "R/First Appeal No. 1211 of 2026, judgment of 24 March 2026",
+    "about": "Gujarat Housing Board",
+    "summary": "The High Court dismissed the Board's appeal against a commercial court decree of Rs 49,05,376 with 6% interest, awarded to an architecture and planning firm for design work on a housing project. Appeal status after this judgment was not checked.",
+    "threadDate": "2026-03-24"
+  },
+  {
+    "kind": "court",
+    "url": "https://indiankanoon.org/doc/48474030/",
+    "court": "Delhi District Court, Commercial Court-05 (South East), Saket",
+    "sourceTitle": "CS (COMM) No. 176/2022, judgment of 30 March 2026",
+    "about": "Gyan Ved Foundation",
+    "summary": "The court decreed an architect's suit for unpaid architectural consultancy invoices (claim: Rs 24,19,942), with 9% interest from the date of filing. Appeal status was not checked.",
+    "threadDate": "2026-03-30"
+  },
+  {
+    "kind": "court",
+    "url": "https://indiankanoon.org/doc/193683917/",
+    "court": "Delhi District Court, Commercial Court-06 (South East), Saket",
+    "sourceTitle": "Civil Suit (Comm.) No. 987/2023, judgment of 18 July 2024",
+    "about": "Pet Educational Industries Pvt. Ltd.",
+    "summary": "The court dismissed the company's application for leave to defend and decreed Rs 3,40,000 with 9% interest and costs. The judgment page did not make clear what service the money was for. Appeal status was not checked.",
+    "threadDate": "2024-07-18"
+  },
+  {
+    "kind": "court",
+    "url": "https://indiankanoon.org/doc/46137083/",
+    "court": "Bengaluru City Civil Court (LXIX Additional City Civil and Sessions Judge)",
+    "sourceTitle": "O.S. No. 7106/2023, judgment of September/October 2026",
+    "about": "Moerheim Roses and Trading India Pvt. Ltd.",
+    "summary": "The court partly decreed a law firm's suit for unpaid professional fees: the company must pay Rs 2,75,000 with 9% interest. The company did not appear (ex parte) and the claims against its directors were dismissed. This is a lawyer's fee case, not a freelance one."
+  }
+]

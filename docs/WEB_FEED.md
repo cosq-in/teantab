@@ -34,3 +34,17 @@ curl -X POST $API/tea/admin/web -H "Authorization: Bearer $TOKEN" -H 'Content-Ty
 curl -X PUT $API/tea/admin/web/<id> -H "Authorization: Bearer $TOKEN" -d '{"status":"published|held|removed"}'
 ```
 Only `https://…reddit.com/r/…` thread links are accepted.
+
+## Court records
+The same list also holds published court judgments (`"kind": "court"`, link must be `indiankanoon.org/doc/<number>/`, plus a `court` field). They show a COURT RECORD tag instead of UNVERIFIED, but are still not Tea & Tab flags. Only decrees against organisations or public bodies, with the operative order read by a person. Private individuals are never listed. Always check for later appeals.
+
+`seed/court_records.json` holds the four we verified by reading the judgment pages (Gujarat Housing Board, Gyan Ved Foundation, Pet Educational Industries, Moerheim Roses). Two are design/architecture fees. Moerheim is a law firm's fee suit and Pet Educational does not say what the service was; both are labelled as such. Read each, have counsel review, then publish with the staff route:
+```
+for i in 0 1 2 3; do
+  jq ".[$i]" seed/court_records.json | curl -X POST $API/tea/admin/web -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' -d @-
+done
+```
+Run migration `021_tea_court_records.sql` first.
+
+## Keyword check on judgments
+`tools/classify_judgments.py` reads the doc ids from the seed CSVs, gets each judgment (your saved files via `--dir`, or Indian Kanoon's official paid API with `INDIANKANOON_TOKEN`; it does not crawl or search), counts design and legal-practice words and writes a review CSV: `legal-fees`, `likely-design`, `possible-design` or `not-design`. It is a first filter only: a person still reads the judgment.
