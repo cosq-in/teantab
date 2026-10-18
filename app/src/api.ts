@@ -32,6 +32,8 @@ export const api = {
   bootstrap: () => call<Bootstrap>('/tea/bootstrap'),
   byPhone: (phone: string) => call<Bootstrap>('/tea/clients/by-phone?phone=' + encodeURIComponent(phone)),
   web: () => call<{ items: WebItem[] }>('/tea/web'),
+  webItem: (id: number) => call<{ item: WebItem; comments: Comment[]; roles: Record<string, string> }>('/tea/web/' + id),
+  webComment: (id: number, text: string, parentId?: number) => call<Comment>('/tea/web/' + id + '/comments', send('POST', { text, parentId })),
   me: () => call<{ handle: string; role: string }>('/tea/me'),
   setRole: (role: string) => call<{ handle: string; role: string }>('/tea/me', send('PUT', { role })),
   createFlag: (f: FlagForm, cats: string[], proofs: string[], pub: boolean) => call<Post>('/tea/flags', send('POST', { ...f, cats, proofs, pub })),

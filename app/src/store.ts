@@ -4,7 +4,7 @@ import { HANDLES, SEED_CLIENTS, SEED_POSTS, SEED_ROLES } from './data/seed';
 import type { Client, FlagForm, Post } from './data/types';
 
 export const EMPTY_FORM: FlagForm = { client: '', gst: '', job: '', amount: '', story: '', web: '', insta: '', phones: [] };
-export type View = null | { k: 'thread'; id: number } | { k: 'dossier'; id: number } | { k: 'me' } | { k: 'file'; prefill?: string };
+export type View = null | { k: 'thread'; id: number } | { k: 'dossier'; id: number } | { k: 'web'; id: number } | { k: 'me' } | { k: 'file'; prefill?: string };
 
 export function useTea() {
   const [role, setRole] = useState('designer');

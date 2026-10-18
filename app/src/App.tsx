@@ -3,6 +3,7 @@ import Onboarding from './screens/Onboarding';
 import Home from './screens/Home';
 import Thread from './screens/Thread';
 import Dossier from './screens/Dossier';
+import WebThread from './screens/WebThread';
 import Me from './screens/Me';
 import FileFlag from './screens/FileFlag';
 
@@ -21,6 +22,7 @@ export default function App() {
               <div className="grass" style={{ flex: 'none', height: 22 }} />
               {v.k === 'thread' && <Thread t={t} id={v.id} />}
               {v.k === 'dossier' && <Dossier t={t} id={v.id} />}
+              {v.k === 'web' && <WebThread t={t} id={v.id} />}
               {v.k === 'me' && <Me t={t} />}
               {v.k === 'file' && <FileFlag t={t} />}
             </div>

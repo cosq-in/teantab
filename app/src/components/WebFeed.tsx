@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { api, requestRemoval } from '../api';
 import type { WebItem } from '../data/types';
+import type { Tea } from '../store';
 
 // Staff-curated links to public threads. Always labelled unverified; companies can ask for removal.
-export default function WebFeed() {
+export default function WebFeed({ t }: { t: Tea }) {
   const [items, setItems] = useState<WebItem[]>([]);
   useEffect(() => { api.web().then((r) => r && setItems(r.items)); }, []);
   if (!items.length) return null;
@@ -11,12 +12,12 @@ export default function WebFeed() {
     <div className="col" style={{ flex: 'none', gap: 10 }}>
       <div><div className="px" style={{ fontSize: 20 }}>from around the web</div>
         <div style={{ font: '700 12px/1.4 var(--sans)', color: 'var(--muted)' }}>Links to public threads and court judgments, picked by us. They are not Tea &amp; Tab flags. Threads are other people's unverified claims; judgments are public records, so check for later appeals.</div></div>
-      {items.map((it) => <Item key={it.id} it={it} onHidden={() => setItems((xs) => xs.filter((x) => x.id !== it.id))} />)}
+      {items.map((it) => <Item key={it.id} it={it} t={t} onHidden={() => setItems((xs) => xs.filter((x) => x.id !== it.id))} />)}
     </div>
   );
 }
 
-function Item({ it, onHidden }: { it: WebItem; onHidden: () => void }) {
+function Item({ it, t, onHidden }: { it: WebItem; t: Tea; onHidden: () => void }) {
   const court = it.kind === 'court';
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -30,15 +31,16 @@ function Item({ it, onHidden }: { it: WebItem; onHidden: () => void }) {
     if (e) setErr(e); else onHidden();
   };
   return (
-    <div className="row col" style={{ padding: '10px 12px', gap: 6, flex: 'none' }}>
+    <div className="row col" role="button" tabIndex={0} onClick={() => t.setView({ k: 'web', id: it.id })} onKeyDown={(e) => e.key === 'Enter' && t.setView({ k: 'web', id: it.id })} style={{ padding: '10px 12px', gap: 6, flex: 'none', cursor: 'pointer' }}>
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
         <span className="tag" style={{ background: court ? 'var(--gold)' : 'var(--cream2)', border: '2px solid var(--ink)', padding: '0 6px' }}>{court ? 'COURT RECORD' : 'UNVERIFIED'}</span>
         <span className="tag" style={{ background: 'var(--ink)', color: 'var(--cream)' }}>{it.about}</span>
       </div>
       <div style={{ fontSize: 14, lineHeight: 1.45 }}>{it.summary}</div>
-      <a href={it.url} target="_blank" rel="noopener noreferrer" style={{ font: '700 12px/1.4 var(--sans)', overflowWrap: 'anywhere' }}>{court ? `${it.court}: ${it.sourceTitle}. Read the judgment` : `Source: ${it.source}${it.threadDate ? ', ' + it.threadDate : ''}: "${it.sourceTitle}"`}</a>
-      {!open && <button className="plain" onClick={() => setOpen(true)} style={{ font: '700 12px var(--sans)', color: 'var(--muted)' }}>are you the company? ask for removal</button>}
-      {open && <div className="col" style={{ gap: 8 }}>
+      <a href={it.url} onClick={(e) => e.stopPropagation()} target="_blank" rel="noopener noreferrer" style={{ font: '700 12px/1.4 var(--sans)', overflowWrap: 'anywhere' }}>{court ? `${it.court}: ${it.sourceTitle}. Read the judgment` : `Source: ${it.source}${it.threadDate ? ', ' + it.threadDate : ''}: "${it.sourceTitle}"`}</a>
+      <span style={{ font: '700 12px var(--sans)', color: 'var(--green-d)' }}>open the tea &rarr;</span>
+      {!open && <button className="plain" onClick={(e) => { e.stopPropagation(); setOpen(true); }} style={{ font: '700 12px var(--sans)', color: 'var(--muted)' }}>are you the company? ask for removal</button>}
+      {open && <div className="col" onClick={(e) => e.stopPropagation()} style={{ gap: 8 }}>
         <input className="field" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your email, so we can reply" style={{ minHeight: 42, fontSize: 14 }} />
         <textarea className="field" rows={3} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="what is wrong or out of date?" style={{ padding: '10px 14px', font: "400 14px/1.4 var(--sans)", resize: 'none' }} />
         <div style={{ fontSize: 12, color: 'var(--muted)' }}>The item is hidden as soon as you send this, while we review it.</div>

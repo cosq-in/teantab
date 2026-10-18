@@ -94,7 +94,7 @@ export default function Home({ t }: { t: Tea }) {
               </div>
             );
           })}
-          <WebFeed />
+          <WebFeed t={t} />
         </>}
       </div>
 
